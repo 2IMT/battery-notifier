@@ -1,12 +1,57 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <time.h>
 
 #include "envargs.h"
 #include "battery.h"
 #include "notify.h"
 
-int main() {
+#ifndef BN_VERSION
+#define BN_VERSION "unknown"
+#endif
+
+static const char* VERSION_TEXT = "battery-notifier version " BN_VERSION "\n";
+
+static const char* HELP_TEXT =
+    "battery-notifier version " BN_VERSION "\n"
+    "\n"
+    "USAGE: battery-notifier\n"
+    "\n"
+    "ARGUMENTS:\n"
+    "    -h, --help, help - Display this help message\n"
+    "    -v, --version, version - Display version information\n"
+    "\n"
+    "CONFIGURATION:\n"
+    "    battery-notifier is configured using environment variables.\n"
+    "    The following environment variables are used:\n"
+    "    BN_BATTERY_PATH - Path to the battery device directory\n"
+    "        Default: '/sys/class/power_supply/BAT0'\n"
+    "    BN_ADAPTER_PATH - Path to the power adapter device directory\n"
+    "        Default: '/sys/class/power_supply/AC0'\n"
+    "    BN_THRESHOLD - Battery level threshold\n"
+    "        Default: 15\n"
+    "    BN_PERIOD_SECS - Period of battery state polling in seconds\n"
+    "        Default: 30\n"
+    "    BN_NOTIFY_COMMAND - Command to execute when battery level is below the threshold\n"
+    "        Default: 'notify-send \"The battery is low\" \"Please connect the charger\"'\n";
+
+int main(int argc, char** argv) {
+    if (argc > 1) {
+        if (strcmp(argv[1], "help") == 0 ||
+            strcmp(argv[1], "--help") == 0 ||
+            strcmp(argv[1], "-h") == 0) {
+            printf("%s", HELP_TEXT);
+            return 0;
+        }
+        if (strcmp(argv[1], "version") == 0 ||
+            strcmp(argv[1], "--version") == 0 ||
+            strcmp(argv[1], "-v") == 0) {
+            printf("%s", VERSION_TEXT);
+            return 0;
+        }
+    }
+
     struct bn_envargs envargs;
     if (!bn_envargs_load(&envargs)) {
         return 1;
@@ -33,7 +78,9 @@ int main() {
 
         if (!battery.charging && battery.level <= envargs.threshold) {
             fprintf(stderr, "INFO: low battery level, notifying...\n");
-            bn_notify(envargs.notify_command);
+            if (!bn_notify(envargs.notify_command)) {
+                return 1;
+            }
         }
 
         next.tv_sec += interval.tv_sec;
