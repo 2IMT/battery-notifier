@@ -1,5 +1,5 @@
 CC ?= gcc
-CFLAGS = -std=c17 -Wall -Wextra
+CFLAGS = -Wall -Wextra
 LDFLAGS =
 MYCFLAGS =
 
