@@ -7,14 +7,17 @@ INSTALL_PREFIX = /usr/local
 
 all: battery-notifier
 
-battery-notifier: main.o envargs.o
-	$(CC) $(CFLAGS) $(MYCFLAGS) -o battery-notifier main.o envargs.o
+battery-notifier: main.o envargs.o battery.o
+	$(CC) $(CFLAGS) $(MYCFLAGS) -o battery-notifier main.o envargs.o battery.o
 
-main.o: main.c envargs.h
+main.o: main.c envargs.h battery.h
 	$(CC) $(CFLAGS) $(MYCFLAGS) $(LDFLAGS) -c main.c
 
-envargs.o: envargs.c envargs.h
+envargs.o: envargs.c envargs.h util.h
 	$(CC) $(CFLAGS) $(MYCFLAGS) $(LDFLAGS) -c envargs.c
+
+battery.o: battery.c battery.h util.h
+	$(CC) $(CFLAGS) $(MYCFLAGS) $(LDFLAGS) -c battery.c
 
 .PHONY: install
 install: battery-notifier
@@ -26,4 +29,4 @@ uninstall:
 
 .PHONY: clean
 clean:
-	rm -f main.o envargs.o battery-notifier
+	rm -f main.o envargs.o battery.o battery-notifier
