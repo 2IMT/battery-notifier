@@ -2,6 +2,7 @@
 
 #include "envargs.h"
 #include "battery.h"
+#include "notify.h"
 
 int main() {
     struct bn_envargs envargs;
@@ -22,6 +23,8 @@ int main() {
 
     printf("level: %d\n", battery.level);
     printf("charging: %d\n", battery.charging);
+
+    bn_notify(envargs.notify_command);
 
     return 0;
 }
