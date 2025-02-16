@@ -30,7 +30,7 @@ bool bn_envargs_load(struct bn_envargs* envargs) {
             return false;
         }
 
-        if (threshold < 1 || threshold > 99) {
+        if (threshold < 0 || threshold > 100) {
             fprintf(stderr, "ERROR: threshold value `%s` out of range (set by BN_THRESHOLD)\n", value);
             return false;
         }
