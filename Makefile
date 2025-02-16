@@ -26,4 +26,4 @@ uninstall:
 
 .PHONY: clean
 clean:
-	rm -f main.o battery-notifier
+	rm -f main.o envargs.o battery-notifier
