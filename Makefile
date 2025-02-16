@@ -7,7 +7,7 @@ LDFLAGS =
 DEFINITIONS = -DBN_VERSION=\"$(VERSION)\"
 MYDEFINITIONS =
 
-INSTALL_PREFIX = /usr/local
+INSTALL_PREFIX ?= /usr/local
 
 all: battery-notifier
 
