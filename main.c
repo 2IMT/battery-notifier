@@ -36,6 +36,15 @@ static const char* HELP_TEXT =
     "    BN_NOTIFY_COMMAND - Command to execute when battery level is below the threshold\n"
     "        Default: 'notify-send \"The battery is low\" \"Please connect the charger\"'\n";
 
+static inline void _advance_time(struct timespec* curr, const struct timespec* interval) {
+    curr->tv_sec += interval->tv_sec;
+    curr->tv_nsec += interval->tv_nsec;
+    if (curr->tv_nsec >= 1000000000) {
+        curr->tv_sec++;
+        curr->tv_nsec -= 1000000000;
+    }
+}
+
 int main(int argc, char** argv) {
     if (argc > 1) {
         if (strcmp(argv[1], "help") == 0 ||
@@ -65,6 +74,7 @@ int main(int argc, char** argv) {
 
     struct timespec interval = { .tv_sec = envargs.period_secs, .tv_nsec = 0 };
     struct timespec next = { 0 };
+    struct timespec now = { 0 };
 
     clock_gettime(CLOCK_MONOTONIC, &next);
     while (true) {
@@ -83,11 +93,15 @@ int main(int argc, char** argv) {
             }
         }
 
-        next.tv_sec += interval.tv_sec;
-        next.tv_nsec += interval.tv_nsec;
-        if (next.tv_nsec >= 1000000000) {
-            next.tv_sec++;
-            next.tv_nsec -= 1000000000;
+        _advance_time(&next, &interval);
+
+        clock_gettime(CLOCK_MONOTONIC, &now);
+
+        if ((now.tv_sec > next.tv_sec) ||
+            (now.tv_sec == next.tv_sec && now.tv_nsec > next.tv_nsec)) {
+            next = now;
+
+            _advance_time(&next, &interval);
         }
 
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &next, NULL);
