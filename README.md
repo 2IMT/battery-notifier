@@ -1,8 +1,20 @@
-# battery-notifier
+# battery-notifier <a id="battery-notifier"></a>
 
 CLI tool that notifies you when your battery is low.
 
-## Usage
+## Table of contents <a id="table-of-contents"></a>
+
+- [battery-notifier](#battery-notifier)
+- [Table of contents](#table-of-contents)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Build](#build)
+  - [Dependencies](#dependencies)
+  - [Building](#building)
+  - [Installation](#installation)
+  - [Installation (Arch-based distros)](#installation-arch-based)
+
+## Usage <a id="usage"></a>
 
 Just start it and let it run in background:
 
@@ -10,7 +22,7 @@ Just start it and let it run in background:
 battery-notifier
 ```
 
-## Configuration
+## Configuration <a id="configuration"></a>
 
 `battery-notifier` is configured using environment variables.
 
@@ -27,20 +39,22 @@ The following environment variables are used:
 - `BN_NOTIFY_COMMAND` - Command to execute when battery level is below the threshold
   - Default: `notify-send "The battery is low" "Please connect the charger"`
 
-## Build
+## Build <a id="build"></a>
 
-### Dependencies
+Note: Arch-based distro users may skip to [Installation (Arch-based distros)](#installation-arch-based) section
+
+### Dependencies <a id="dependencies"></a>
 
 - C compiler
 - Make
 
-### Building
+### Building <a id="building"></a>
 
 ```bash
 make
 ```
 
-### Installation
+### Installation <a id="installation"></a>
 
 Note: this may require root privileges.
 
@@ -49,3 +63,7 @@ make install
 ```
 
 This will install the binary to `/usr/local/bin` if the `INSTALL_PREFIX` environment variable is not set. Set the `INSTALL_PREFIX` environment variable to change the installation directory.
+
+### Installation (Arch-based distros) <a id="installation-arch-based"></a>
+
+Use [this](https://aur.archlinux.org/packages/battery-notifier) AUR package
