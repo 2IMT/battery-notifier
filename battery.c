@@ -66,9 +66,6 @@ bool bn_battery_poll(const char* battery_path, const char* adapter_path, struct 
         goto end;
     }
 
-    battery_capacity_string[strlen(battery_capacity_string) - 2] = '\0';
-    adapter_online_string[strlen(adapter_online_string) - 2] = '\0';
-
     if (battery_capacity < 0 || battery_capacity > 100) {
         fprintf(stderr, "ERROR: invalid battery capacity `%s`\n", battery_capacity_string);
         status = false;
